@@ -30,6 +30,7 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
     var showMapView = false
     
     var centerMapOnUserLocation: Bool = true
+    var prevLocation: CLLocation?
     
     ///Whether to display some debugging data
     ///This currently displays the coordinate of the best location estimate
@@ -96,6 +97,13 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
             }
         }
         
+        updateUserLocationTimer = Timer.scheduledTimer(
+            timeInterval: 0.5,
+            target: self,
+            selector: #selector(TrainingViewController.updateUserLocation),
+            userInfo: nil,
+            repeats: true)
+
         labelDoubleTap.isHidden = true
         startTimer()
     }
@@ -110,13 +118,6 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
         mapView.showsUserLocation = true
         mapView.alpha = 0.8
         view.addSubview(mapView)
-        
-        updateUserLocationTimer = Timer.scheduledTimer(
-            timeInterval: 0.5,
-            target: self,
-            selector: #selector(TrainingViewController.updateUserLocation),
-            userInfo: nil,
-            repeats: true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -190,8 +191,13 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
     
     @objc func updateUserLocation() {
         if let currentLocation = sceneLocationView.currentLocation() {
+            if prevLocation == nil {
+                prevLocation = currentLocation
+                refresh {
+                }
+            }
             DispatchQueue.main.async {
-                
+                print("BOBBYTEST \(currentLocation.altitude)")
                 if let bestEstimate = self.sceneLocationView.bestLocationEstimate(),
                     let position = self.sceneLocationView.currentScenePosition() {
                     DDLogDebug("")
@@ -428,6 +434,7 @@ extension TrainingViewController {
         let lat = pin.lat
         let lon = pin.lon
         let altitude = sceneLocationView.currentLocation()?.altitude ?? 22.0 // pin.el // basically by default
+        print("BOBBYTEST altitude of pin \(altitude)")
         let label: String
         if let landmark = pin as? Landmark, let text = landmark.label {
             label = text
