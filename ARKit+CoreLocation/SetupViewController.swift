@@ -14,8 +14,10 @@ class SetupViewController: UIViewController {
     var sessionId: String!
     
     @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var buttonStart: UIButton!
-    
+    @IBOutlet weak var buttonPlus: UIButton!
+    @IBOutlet weak var buttonBang: UIButton!
+    @IBOutlet weak var buttonPlay: UIButton!
+
     var locationIsAccurate: Bool {
         return currentAccuracy < 15
     }
@@ -23,16 +25,16 @@ class SetupViewController: UIViewController {
         didSet {
             if locationIsAccurate {
 //                print("Location accuracy: ready (\(currentAccuracy))")
-                buttonStart.alpha = 1
+                buttonPlay.alpha = 1
             } else {
 //                print("Location accuracy: not ready (\(currentAccuracy))")
-                buttonStart.alpha = 0.5
+                buttonPlay.alpha = 0.5
             }
         }
     }
     
     // Data
-    var annotations: [MKAnnotation] = [MKAnnotation]()
+    var annotations: [String: PinnableAnnotation] = [String: PinnableAnnotation]()
     let locationManager = LocationManager.shared
     
     override func viewDidLoad() {
@@ -50,48 +52,128 @@ class SetupViewController: UIViewController {
     }
     
     func refresh(completion:@escaping (()->Void)) {
-        mapView.removeAnnotations(annotations)
-        VenueService.getBuilding { (pins) in
+        for (key, value) in annotations {
+            mapView.removeAnnotation(value)
+            annotations[key] = nil
+        }
+        VenueService.getPins(type: .landmark, completion: { (resultDict) in
             DispatchQueue.main.async {
-                for pin in pins {
-                    self.addAnnotation(pin: pin)
+                for (id, pin) in resultDict {
+                    self.addAnnotation(id: id, pin: pin)
                 }
                 completion()
             }
-        }
+        })
+        
+        VenueService.getPins(type: .exit, completion: { (resultDict) in
+            DispatchQueue.main.async {
+                for (id, pin) in resultDict {
+                    self.addAnnotation(id: id, pin: pin)
+                }
+                completion()
+            }
+        })
+
+        VenueService.getPins(type: .event, completion: { (resultDict) in
+            DispatchQueue.main.async {
+                for (id, pin) in resultDict {
+                    self.addAnnotation(id: id, pin: pin)
+                }
+                completion()
+            }
+        })
     }
 
-    func addAnnotation(pin: Pinnable) {
-        let annotation = MKPointAnnotation()
+    func addAnnotation(id: String, pin: Pinnable) {
+        let annotation = PinnableAnnotation()
+        annotation.pin = pin
+        
         let coordinate = CLLocationCoordinate2DMake(pin.lat, pin.lon)
         annotation.coordinate = coordinate
         if let title = (pin as? Landmark)?.label {
             annotation.title = title
         }
         if let type = (pin as? Event)?.eventType {
-            annotation.subtitle = type
-        } else if let type = (pin as? Exit)?.type {
-            annotation.subtitle = type
+            annotation.subtitle = type.rawValue
+        } else if let type = (pin as? Exit)?.exitType {
+            annotation.subtitle = type.rawValue
         }
         mapView.addAnnotation(annotation)
+        
+        annotations[id] = annotation
     }
     
     @IBAction func didClickButton(_ sender: UIButton) {
         if locationIsAccurate {
-            showButtonOptions()
+            showOptions(for: sender)
         } else {
-            let alert = UIAlertController(title: "Warning: Location inaccurate", message: "Your location accuracy is currently at \(Int(currentAccuracy)). Lower accuracy (<15) will help with a better experience. Continue?", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Wait", style: .default, handler: { (action) in
-                self.showButtonOptions()
+            let alert = UIAlertController(title: "Warning: Location inaccurate", message: "Your location accuracy is currently at \(Int(currentAccuracy)). Accuracy below 15m will help with a better experience. Continue?", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Wait", style: .default, handler: nil))
+            alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
+                self.showOptions(for: sender)
             }))
-            alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: nil))
-
+            
             present(alert, animated: true, completion: nil)
         }
     }
     
-    fileprivate func showButtonOptions() {
-        print("here")
+    func showOptions(for button: UIButton) {
+        if button == buttonPlay {
+            goToTraining()
+        } else if button == buttonPlus {
+            goToAddPin()
+        } else if button == buttonBang {
+            goToAddIncident()
+        }
+    }
+
+    fileprivate func goToTraining() {
+        performSegue(withIdentifier: "toARView", sender: nil)
+    }
+    
+    fileprivate func goToAddPin() {
+        let alert = UIAlertController(title: "Please select landmark type:", message: "", preferredStyle: UIAlertControllerStyle.actionSheet)
+        alert.addAction(UIAlertAction(title: "Exit (Door)", style: .default, handler: { (action) in
+            self.addExit(type: .door)
+        }))
+        alert.addAction(UIAlertAction(title: "Saferoom", style: .default, handler: { (action) in
+            self.addExit(type: .saferoom)
+        }))
+        alert.addAction(UIAlertAction(title: "Corner", style: .default, handler: { (action) in
+            self.addLandmark(label: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "Other", style: .default, handler: { (action) in
+            let alert = UIAlertController(title: "Please label the landmark:", message: "ex: stage, screen, restroom...", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addTextField { (textField) in
+                textField.placeholder = " "
+            }
+            
+            alert.addAction(UIAlertAction(title: "Save", style: .default) { (alertAction) in
+                let textField = alert.textFields![0] as UITextField
+                print(textField.text)
+                self.addLandmark(label: textField.text)
+            })
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .default) { (alertAction) in
+            })
+            self.present(alert, animated: true, completion: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    fileprivate func goToAddIncident() {
+        let alert = UIAlertController(title: "Please select event type:", message: "", preferredStyle: UIAlertControllerStyle.actionSheet)
+        alert.addAction(UIAlertAction(title: "Fire", style: .default, handler: { (action) in
+            self.addEvent(type: .fire)
+        }))
+        alert.addAction(UIAlertAction(title: "Shooter", style: .default, handler: { (action) in
+            self.addEvent(type: .shooter)
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
+        }))
+        present(alert, animated: true, completion: nil)
     }
 }
 
@@ -132,17 +214,116 @@ extension SetupViewController: MKMapViewDelegate {
             }
         }
     }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let identifier = "MyPin"
+        
+        if annotation is MKUserLocation {
+            return nil
+        }
+        
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        
+        if annotationView == nil {
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+            
+            if let pinAnnotation = annotation as? PinnableAnnotation {
+                annotationView?.image = pinAnnotation.image?.resized(newSize: CGSize(width: 20, height: 20))
+            }
+            
+            // if you want a disclosure button, you'd might do something like:
+            //
+            // let detailButton = UIButton(type: .detailDisclosure)
+            // annotationView?.rightCalloutAccessoryView = detailButton
+        } else {
+            annotationView?.annotation = annotation
+        }
+        
+        return annotationView
+    }
+}
 
-//    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-//        guard let selectedAnnotation = view.annotation else { return }
-//        var selectedId: String?
-//        for annotation in annotations {
-//            if annotation.title! == selectedAnnotation.title! && annotation.coordinate.latitude == selectedAnnotation.coordinate.latitude && annotation.coordinate.longitude == selectedAnnotation.coordinate.longitude {
-//                break
-//            }
-//        }
-//    }
-//
-//    func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
-//    }
+// MARK: - Setup
+extension SetupViewController {
+    fileprivate func addLandmark(label: String?) {
+        guard let location = locationManager.currentLocation else { return }
+        
+        let params: [String: Any] = ["lat": location.coordinate.latitude,
+                                     "lon": location.coordinate.longitude,
+                                     "el": location.altitude,
+                                     "label": label ?? "corner"
+                                    ]
+        sendData(params: params, name: "landmark")
+    }
+    
+    fileprivate func addExit(type: ExitType) {
+        guard let location = locationManager.currentLocation else { return }
+        
+        let params: [String: Any] = ["lat": location.coordinate.latitude,
+                                     "lon": location.coordinate.longitude,
+                                     "el": location.altitude,
+                                     "type": type.rawValue
+        ]
+        sendData(params: params, name: "exit")
+    }
+
+    fileprivate func addEvent(type: EventType) {
+        guard let location = locationManager.currentLocation else { return }
+        
+        let params: [String: Any] = ["lat": location.coordinate.latitude,
+                                     "lon": location.coordinate.longitude,
+                                     "el": location.altitude,
+                                     "eventType": type.rawValue
+        ]
+        sendData(params: params, name: "event")
+    }
+    
+    func sendData(params:[String:Any], name: String){
+        
+        guard let sessionId = VenueService.shared.sessionId else { return }
+        let service = APIService()
+        
+        service.cloudFunction(id: sessionId, functionName: name, params: params) { (result, error) in
+            DispatchQueue.main.async {
+                if let successfulResult = result as? [String:Any]{
+                    print(successfulResult)
+                    let title = "Saved!"
+                    let lon = successfulResult["lon"]!
+                    let lat = successfulResult["lat"]!
+                    let message: String
+                    if let placeLabel = successfulResult["label"]{
+                        message = "\(placeLabel): \n\(lat),\n\(lon)"
+                    } else if let placeType = successfulResult["type"]{
+                        message = "\(placeType): \n\(lat),\n\(lon)"
+                    } else if let eventType = successfulResult["eventType"] {
+                        message = "\(eventType): \n\(lat),\n\(lon)"
+                    } else {
+                        message = ""
+                    }
+                    self.feedback(title: title, message: message)
+                }
+                else{
+                    if let failedResult = error{
+                        let title = "Error!"
+                        let message = "Please try again"
+                        print(failedResult)
+                        self.feedback(title: title, message: message)
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    func feedback(title: String, message: String){
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.actionSheet)
+        
+        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        
+        alert.addAction(action)
+        
+        self.present(alert, animated:true, completion: nil)
+        
+    }
 }

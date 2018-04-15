@@ -24,6 +24,8 @@ public protocol SceneLocationViewDelegate: class {
     func sceneLocationViewDidSetupSceneNode(sceneLocationView: SceneLocationView, sceneNode: SCNNode)
     
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode)
+    
+    func sceneLocationViewDidUpdateHeading(heading: CLLocationDirection)
 }
 
 ///Different methods which can be used when determining locations (such as the user's location).
@@ -500,6 +502,6 @@ extension SceneLocationView: LocationManagerDelegate {
     }
     
     func locationManagerDidUpdateHeading(_ locationManager: LocationManager, heading: CLLocationDirection, accuracy: CLLocationAccuracy) {
-        
+        locationDelegate?.sceneLocationViewDidUpdateHeading(heading: heading)
     }
 }

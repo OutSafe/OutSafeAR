@@ -28,6 +28,7 @@
 		8EEB1C1F2083054B00FE4209 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EEB1C1E2083054B00FE4209 /* Login.storyboard */; };
 		8EEB1C2220830BDD00FE4209 /* SetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EEB1C2120830BDD00FE4209 /* SetupViewController.swift */; };
 		8EEB1C2420830D2000FE4209 /* Pinnable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EEB1C2320830D2000FE4209 /* Pinnable.swift */; };
+		8EEB1C28208339B400FE4209 /* ARSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EEB1C27208339B400FE4209 /* ARSetupViewController.swift */; };
 		D8C205D11F5B197200675E6E /* NotSupportedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C205D01F5B197200675E6E /* NotSupportedViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		8EEB1C1E2083054B00FE4209 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
 		8EEB1C2120830BDD00FE4209 /* SetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupViewController.swift; sourceTree = "<group>"; };
 		8EEB1C2320830D2000FE4209 /* Pinnable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pinnable.swift; sourceTree = "<group>"; };
+		8EEB1C27208339B400FE4209 /* ARSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSetupViewController.swift; sourceTree = "<group>"; };
 		A967016A4C9D5DA8BF8AE438 /* Pods-ARKit+CoreLocation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARKit+CoreLocation.release.xcconfig"; path = "Pods/Target Support Files/Pods-ARKit+CoreLocation/Pods-ARKit+CoreLocation.release.xcconfig"; sourceTree = "<group>"; };
 		D8C205D01F5B197200675E6E /* NotSupportedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotSupportedViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -104,6 +106,7 @@
 				8EEB1C1E2083054B00FE4209 /* Login.storyboard */,
 				8EEB1C1C2083051F00FE4209 /* LoginViewController.swift */,
 				8EEB1C2120830BDD00FE4209 /* SetupViewController.swift */,
+				8EEB1C27208339B400FE4209 /* ARSetupViewController.swift */,
 			);
 			path = "ARKit+CoreLocation";
 			sourceTree = "<group>";
@@ -279,6 +282,7 @@
 				4901EF051F1B7D560067870D /* SceneLocationEstimate+Extensions.swift in Sources */,
 				49A3FC011F09B9CF00AA59C8 /* SceneLocationEstimate.swift in Sources */,
 				8EEB1C1D2083051F00FE4209 /* LoginViewController.swift in Sources */,
+				8EEB1C28208339B400FE4209 /* ARSetupViewController.swift in Sources */,
 				49A3FBDC1F09988100AA59C8 /* AppDelegate.swift in Sources */,
 				49D206F31F124BDD00D7D622 /* SCNNode+Extensions.swift in Sources */,
 				49A3FBF51F099A5F00AA59C8 /* LocationManager.swift in Sources */,

@@ -36,12 +36,7 @@ class LoginViewController: UIViewController {
         guard let id = inputSession.text, !id.isEmpty else { return }
         UserDefaults.standard.set(id, forKey: "DefaultSessionId")
         UserDefaults.standard.synchronize()
+        VenueService.shared.sessionId = id
         performSegue(withIdentifier: "toSetup", sender: id)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let controller = segue.destination as? SetupViewController else { return }
-        guard let id = sender as? String else { return }
-        controller.sessionId = id
     }
 }
