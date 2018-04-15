@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum PinnableType {
+enum PinnableType: String {
     // landmarks
     case landmark
     
@@ -54,7 +54,8 @@ struct Exit: Pinnable {
     var lat: Double
     var lon: Double
     var el: Double
-    let type: String
+    let status: Int
+    let type: ExitType
 }
 
 struct Event: Pinnable {
@@ -62,6 +63,5 @@ struct Event: Pinnable {
     var lat: Double
     var lon: Double
     var el: Double
-    let status: Int
-    let eventType: String
+    let eventType: EventType
 }

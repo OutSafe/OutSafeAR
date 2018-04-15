@@ -9,15 +9,19 @@
 import UIKit
 
 class VenueService: NSObject {
-    class func getBuilding(completion: @escaping ((_ pins: [Pinnable])->Void)) {
+    static let shared = VenueService()
+    var sessionId: String?
+    
+    class func getPins(type: PinnableType, completion: @escaping ((_ pins: [String: Pinnable])->Void)) {
+        guard let sessionId = shared.sessionId else { return }
         let service = APIService()
-        service.cloudFunction(id: "6", functionName: "landmark", method: "GET", params: nil) { (result, error) in
+        service.cloudFunction(id: sessionId, functionName: type.rawValue, method: "GET", params: nil) { (result, error) in
             print("Result \(result) error \(error)")
             if let results = result as? [String: [String: Any]] {
-                var pins: [Pinnable] = []
+                var pins: [String: Pinnable] = [:]
                 for (id, dict) in results {
                     if let pin = process(id: id, dict: dict) {
-                        pins.append(pin)
+                        pins[id] = pin
                     }
                 }
                 print("Pins: \(pins)")
@@ -29,20 +33,15 @@ class VenueService: NSObject {
     }
     
     class func process(id: String, dict: [String: Any]) -> Pinnable? {
-//        guard let latString = dict["lat"] as? String, let lat = Double(latString) else { return nil }
-//        guard let lonString = dict["lon"] as? String, let lon = Double(lonString) else { return nil }
-//        guard let elString = dict["el"] as? String, let el = Double(elString) else { return nil }
         guard let lat = dict["lat"] as? Double else { print("Process failed at lat"); return nil }
         guard let lon = dict["lon"] as? Double else { print("Process failed at lon");return nil }
         guard let el = dict["el"] as? Double else { print("Process failed at el"); return nil }
         let label = dict["label"] as? String
-        let exitType = dict["type"] as? String
-        let eventType = dict["eventType"] as? String
-        
-        if let eventType = eventType {
-            return Event(id: id, lat: lat, lon: lon, el: el, status: 1, eventType: eventType)
-        } else if let exitType = exitType {
-            return Exit(id: id, lat: lat, lon: lon, el: el, type: exitType)
+        if let exitType = dict["type"] as? String, let type = ExitType(rawValue: exitType) {
+            let status = dict["status"] as? Int ?? 0
+            return Exit(id: id, lat: lat, lon: lon, el: el, status: status, type: type)
+        } else if let eventType = dict["eventType"] as? String, let type = EventType(rawValue: eventType) {
+            return Event(id: id, lat: lat, lon: lon, el: el, eventType: type)
         } else {
             return Landmark(id: id, lat: lat, lon: lon, el: el, label: label)
         }

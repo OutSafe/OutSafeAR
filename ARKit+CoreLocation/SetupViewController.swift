@@ -34,7 +34,7 @@ class SetupViewController: UIViewController {
     }
     
     // Data
-    var annotations: [MKAnnotation] = [MKAnnotation]()
+    var annotations: [String: MKAnnotation] = [String: MKAnnotation]()
     let locationManager = LocationManager.shared
     
     override func viewDidLoad() {
@@ -52,18 +52,39 @@ class SetupViewController: UIViewController {
     }
     
     func refresh(completion:@escaping (()->Void)) {
-        mapView.removeAnnotations(annotations)
-        VenueService.getBuilding { (pins) in
+        for (key, value) in annotations {
+            mapView.removeAnnotation(value)
+            annotations[key] = nil
+        }
+        VenueService.getPins(type: .landmark, completion: { (resultDict) in
             DispatchQueue.main.async {
-                for pin in pins {
-                    self.addAnnotation(pin: pin)
+                for (id, pin) in resultDict {
+                    self.addAnnotation(id: id, pin: pin)
                 }
                 completion()
             }
-        }
+        })
+        
+        VenueService.getPins(type: .exit, completion: { (resultDict) in
+            DispatchQueue.main.async {
+                for (id, pin) in resultDict {
+                    self.addAnnotation(id: id, pin: pin)
+                }
+                completion()
+            }
+        })
+
+        VenueService.getPins(type: .event, completion: { (resultDict) in
+            DispatchQueue.main.async {
+                for (id, pin) in resultDict {
+                    self.addAnnotation(id: id, pin: pin)
+                }
+                completion()
+            }
+        })
     }
 
-    func addAnnotation(pin: Pinnable) {
+    func addAnnotation(id: String, pin: Pinnable) {
         let annotation = MKPointAnnotation()
         let coordinate = CLLocationCoordinate2DMake(pin.lat, pin.lon)
         annotation.coordinate = coordinate
@@ -71,22 +92,23 @@ class SetupViewController: UIViewController {
             annotation.title = title
         }
         if let type = (pin as? Event)?.eventType {
-            annotation.subtitle = type
+            annotation.subtitle = type.rawValue
         } else if let type = (pin as? Exit)?.type {
-            annotation.subtitle = type
+            annotation.subtitle = type.rawValue
         }
         mapView.addAnnotation(annotation)
+        annotations[id] = annotation
     }
     
     @IBAction func didClickButton(_ sender: UIButton) {
         if locationIsAccurate {
             showOptions(for: sender)
         } else {
-            let alert = UIAlertController(title: "Warning: Location inaccurate", message: "Your location accuracy is currently at \(Int(currentAccuracy)). Lower accuracy (<15) will help with a better experience. Continue?", preferredStyle: UIAlertControllerStyle.alert)
+            let alert = UIAlertController(title: "Warning: Location inaccurate", message: "Your location accuracy is currently at \(Int(currentAccuracy)). Accuracy below 15m will help with a better experience. Continue?", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Wait", style: .default, handler: nil))
             alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
                 self.showOptions(for: sender)
             }))
-            alert.addAction(UIAlertAction(title: "Wait", style: .default, handler: nil))
             
             present(alert, animated: true, completion: nil)
         }
@@ -108,7 +130,7 @@ class SetupViewController: UIViewController {
     
     fileprivate func goToAddPin() {
         let alert = UIAlertController(title: "Please select landmark type:", message: "", preferredStyle: UIAlertControllerStyle.actionSheet)
-        alert.addAction(UIAlertAction(title: "Exit", style: .default, handler: { (action) in
+        alert.addAction(UIAlertAction(title: "Exit (Door)", style: .default, handler: { (action) in
             self.addExit(type: .door)
         }))
         alert.addAction(UIAlertAction(title: "Saferoom", style: .default, handler: { (action) in
@@ -131,6 +153,7 @@ class SetupViewController: UIViewController {
             
             alert.addAction(UIAlertAction(title: "Cancel", style: .default) { (alertAction) in
             })
+            self.present(alert, animated: true, completion: nil)
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
         }))
@@ -227,6 +250,7 @@ extension SetupViewController {
     
     func sendData(params:[String:Any], name: String){
         
+        guard let sessionId = VenueService.shared.sessionId else { return }
         let service = APIService()
         
         service.cloudFunction(id: sessionId, functionName: name, params: params) { (result, error) in
@@ -236,18 +260,17 @@ extension SetupViewController {
                     let title = "Saved!"
                     let lon = successfulResult["lon"]!
                     let lat = successfulResult["lat"]!
+                    let message: String
                     if let placeLabel = successfulResult["label"]{
-                        let message = "\(placeLabel): \n\(lat),\n\(lon)"
-                        self.feedback(title: title, message: message)
-                        
-                    }else{
-                        if let placeType = successfulResult["type"]{
-                            let message = "\(placeType): \n\(lat),\n\(lon)"
-                            self.feedback(title: title, message: message)
-                        }
-                        
+                        message = "\(placeLabel): \n\(lat),\n\(lon)"
+                    } else if let placeType = successfulResult["type"]{
+                        message = "\(placeType): \n\(lat),\n\(lon)"
+                    } else if let eventType = successfulResult["eventType"] {
+                        message = "\(eventType): \n\(lat),\n\(lon)"
+                    } else {
+                        message = ""
                     }
-                    
+                    self.feedback(title: title, message: message)
                 }
                 else{
                     if let failedResult = error{
