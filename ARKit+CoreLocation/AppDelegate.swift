@@ -27,18 +27,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         DDLogDebug("NEW SESSION")
         
         UIApplication.shared.isIdleTimerDisabled = true
-        
-        self.window = UIWindow(frame: UIScreen.main.bounds)
-        
-        self.window!.makeKeyAndVisible()
-        
-        if #available(iOS 11.0, *) {
-            let vc = ViewController()
-            self.window!.rootViewController = vc
-        } else {
-            self.window!.rootViewController = NotSupportedViewController() 
-        }
-        
         return true
     }
 

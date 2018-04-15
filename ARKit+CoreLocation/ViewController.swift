@@ -1,3 +1,6 @@
+
+
+
 //
 //  ViewController.swift
 //  ARKit+CoreLocation
@@ -23,7 +26,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     
     ///Whether to show a map view
     ///The initial value is respected
-    var showMapView: Bool = false
+    var showMapView = false
     
     var centerMapOnUserLocation: Bool = true
     
@@ -36,7 +39,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     
     var updateInfoLabelTimer: Timer?
     
-    var adjustNorthByTappingSidesOfScreen = false
+    var adjustNorthByTappingSidesOfScreen = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,30 +68,29 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         if displayDebugging {
             sceneLocationView.showFeaturePoints = true
         }
-        
-        //Currently set to Canary Wharf
-        let pinCoordinate = CLLocationCoordinate2D(latitude: 51.504607, longitude: -0.019592)
-        let pinLocation = CLLocation(coordinate: pinCoordinate, altitude: 236)
-        let pinImage = UIImage(named: "pin")!
-        let pinLocationNode = LocationAnnotationNode(location: pinLocation, image: pinImage)
-        sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: pinLocationNode)
-        
-        view.addSubview(sceneLocationView)
-        
-        if showMapView {
-            mapView.delegate = self
-            mapView.showsUserLocation = true
-            mapView.alpha = 0.8
-            view.addSubview(mapView)
+
+        // CODEFEST 2018
+        refresh {
+            self.view.addSubview(self.sceneLocationView)
             
-            updateUserLocationTimer = Timer.scheduledTimer(
-                timeInterval: 0.5,
-                target: self,
-                selector: #selector(ViewController.updateUserLocation),
-                userInfo: nil,
-                repeats: true)
+            if self.showMapView {
+                self.toggleMap()
+            }
         }
+    }
+    
+    fileprivate func toggleMap() {
+        mapView.delegate = self
+        mapView.showsUserLocation = true
+        mapView.alpha = 0.8
+        view.addSubview(mapView)
         
+        updateUserLocationTimer = Timer.scheduledTimer(
+            timeInterval: 0.5,
+            target: self,
+            selector: #selector(ViewController.updateUserLocation),
+            userInfo: nil,
+            repeats: true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -305,5 +307,42 @@ extension UIView {
         }
         
         return recursiveSubviews
+    }
+}
+
+extension ViewController {
+    func refresh(completion:@escaping (()->Void)) {
+        VenueService.getBuilding { (pins) in
+            DispatchQueue.main.async {
+                self.addLandmarks(pins: pins)
+                completion()
+            }
+        }
+    }
+    
+    func addLandmarks(pins: [Pinnable]) {
+        for node in sceneLocationView.locationNodes {
+            sceneLocationView.removeLocationNode(locationNode: node)
+        }
+        
+        for pin in pins {
+            let lat = pin.lat
+            let lon = pin.lon
+            let altitude = pin.el + 21
+            let label: String
+            if let landmark = pin as? Landmark, let text = landmark.label {
+                label = text
+            } else {
+                label = ""
+            }
+            
+            print("Adding pin at \(lat) \(lon) \(altitude) label: \(label)")
+            
+            let pinCoordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+            let pinLocation = CLLocation(coordinate: pinCoordinate, altitude: altitude)
+            let pinImage = UIImage(named: "pin")!
+            let pinLocationNode = LocationAnnotationNode(location: pinLocation, image: pinImage)
+            sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: pinLocationNode)
+        }
     }
 }
