@@ -8,9 +8,30 @@
 
 import UIKit
 
-enum ExitType {
+enum PinnableType {
+    // landmarks
+    case landmark
+    
+    // doors
+    case exit
+    
+    // events
+    case event
+}
+
+enum LandmarkType: String {
+    case corner
+    case other
+}
+
+enum ExitType: String {
     case saferoom
     case door
+}
+
+enum EventType: String {
+    case fire
+    case shooter
 }
 
 protocol Pinnable {
