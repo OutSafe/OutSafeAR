@@ -42,6 +42,11 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
     
     var adjustNorthByTappingSidesOfScreen = true
     
+    // timers
+    @IBOutlet weak var labelTimer: UILabel!
+    @IBOutlet weak var buttonSafe: UIButton!
+    var safeTimer: Timer?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -72,8 +77,8 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
             sceneLocationView.showFeaturePoints = true
         }
 
-        self.view.addSubview(self.sceneLocationView)
-
+        self.view.insertSubview(self.sceneLocationView, belowSubview: labelTimer)
+        
         // CODEFEST 2018
         refresh {
             
@@ -81,6 +86,8 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
                 self.toggleMap()
             }
         }
+        
+        startTimer()
     }
     
     fileprivate func toggleMap() {
@@ -116,9 +123,9 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
         
         sceneLocationView.frame = CGRect(
             x: 0,
-            y: 0,
+            y: labelTimer.frame.size.height,
             width: self.view.frame.size.width,
-            height: self.view.frame.size.height)
+            height: self.view.frame.size.height - labelTimer.frame.size.height - buttonSafe.frame.size.height)
         
         infoLabel.frame = CGRect(x: 6, y: 0, width: self.view.frame.size.width - 12, height: 14 * 4)
         
@@ -133,6 +140,30 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
             y: self.view.frame.size.height / 2,
             width: self.view.frame.size.width,
             height: self.view.frame.size.height / 2)
+    }
+    
+    @IBAction func didClickSafe(_ sender: Any) {
+        stopTimer()
+        safeTimer = nil
+    }
+    
+    fileprivate func startTimer() {
+        guard safeTimer == nil else { return }
+        let startTime = Date()
+        safeTimer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true, block: { (timer) in
+            let timeInterval = Date().timeIntervalSince(startTime)
+            let min = Int(timeInterval / 60)
+            let sec = Int(timeInterval - Double(min * 60))
+            
+            let ms = Int((Double(timeInterval) - Double(min * 60) - Double(sec)) * 100)
+            self.labelTimer.text = "\(min)m \(sec)s \(ms)ms"
+        })
+    }
+    
+    fileprivate func stopTimer() {
+        safeTimer?.invalidate()
+        safeTimer = nil
+        buttonSafe.isEnabled = false
     }
     
     override func didReceiveMemoryWarning() {
