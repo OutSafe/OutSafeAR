@@ -15,7 +15,7 @@ import MapKit
 import CocoaLumberjack
 
 @available(iOS 11.0, *)
-class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDelegate {
+class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDelegate {
     let sceneLocationView = SceneLocationView()
     
     let mapView = MKMapView()
@@ -51,10 +51,12 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         infoLabel.numberOfLines = 0
         sceneLocationView.addSubview(infoLabel)
         
+        infoLabel.isHidden = true
+        
         updateInfoLabelTimer = Timer.scheduledTimer(
             timeInterval: 0.1,
             target: self,
-            selector: #selector(ViewController.updateInfoLabel),
+            selector: #selector(TrainingViewController.updateInfoLabel),
             userInfo: nil,
             repeats: true)
         
@@ -90,7 +92,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         updateUserLocationTimer = Timer.scheduledTimer(
             timeInterval: 0.5,
             target: self,
-            selector: #selector(ViewController.updateUserLocation),
+            selector: #selector(TrainingViewController.updateUserLocation),
             userInfo: nil,
             repeats: true)
     }
@@ -344,7 +346,7 @@ extension UIView {
     }
 }
 
-extension ViewController {
+extension TrainingViewController {
     func refresh(completion:@escaping (()->Void)) {
         for node in sceneLocationView.locationNodes {
             sceneLocationView.removeLocationNode(locationNode: node)
