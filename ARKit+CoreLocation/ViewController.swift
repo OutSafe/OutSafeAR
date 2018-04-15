@@ -65,15 +65,11 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         if displayDebugging {
             sceneLocationView.showFeaturePoints = true
         }
-        
-        //Currently set to Canary Wharf
-        let pinCoordinate = CLLocationCoordinate2D(latitude: 51.504607, longitude: -0.019592)
-        let pinLocation = CLLocation(coordinate: pinCoordinate, altitude: 236)
-        let pinImage = UIImage(named: "pin")!
-        let pinLocationNode = LocationAnnotationNode(location: pinLocation, image: pinImage)
-        sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: pinLocationNode)
-        
-        view.addSubview(sceneLocationView)
+
+        // CODEFEST 2018
+        refresh {
+            self.view.addSubview(self.sceneLocationView)
+        }
         
         if showMapView {
             mapView.delegate = self
@@ -305,5 +301,42 @@ extension UIView {
         }
         
         return recursiveSubviews
+    }
+}
+
+extension ViewController {
+    func refresh(completion:@escaping (()->Void)) {
+        VenueService.getBuilding { (pins) in
+            DispatchQueue.main.async {
+                self.addLandmarks(pins: pins)
+                completion()
+            }
+        }
+    }
+    
+    func addLandmarks(pins: [Pinnable]) {
+        for node in sceneLocationView.locationNodes {
+            sceneLocationView.removeLocationNode(locationNode: node)
+        }
+        
+        for pin in pins {
+            let lat = pin.lat
+            let lon = pin.lon
+            let altitude = pin.el + 21
+            let label: String
+            if let landmark = pin as? Landmark, let text = landmark.label {
+                label = text
+            } else {
+                label = ""
+            }
+            
+            print("Adding pin at \(lat) \(lon) \(altitude) label: \(label)")
+            
+            let pinCoordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+            let pinLocation = CLLocation(coordinate: pinCoordinate, altitude: altitude)
+            let pinImage = UIImage(named: "pin")!
+            let pinLocationNode = LocationAnnotationNode(location: pinLocation, image: pinImage)
+            sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: pinLocationNode)
+        }
     }
 }
