@@ -8,6 +8,13 @@
 
 import UIKit
 import CocoaLumberjack
+import Firebase
+import UserNotifications
+import FirebaseMessaging
+
+extension Notification.Name {
+    static let RemoteNotificationReceived = Notification.Name("RemoteNotificationReceived")
+}
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,6 +34,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         DDLogDebug("NEW SESSION")
         
         UIApplication.shared.isIdleTimerDisabled = true
+        
+        FirebaseApp.configure()
+        registerForRemoteNotifications()
+        
         return true
     }
 
@@ -52,6 +63,96 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
+    func registerForRemoteNotifications() {
+        print("PUSH: registering for notifications")
+        
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: {result, error in
+                print("PUSH: request authorization result \(result) error \(String(describing: error))")
+                
+                if result {
+                    DispatchQueue.main.async {
+                        UIApplication.shared.registerForRemoteNotifications()
+                    }
+                }
+        })
+        
+        Messaging.messaging().delegate = self
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
+        print("Remote notification received: \(userInfo)")
+        NotificationCenter.default.post(name: Notification.Name.RemoteNotificationReceived, object: nil)
+    }
 }
 
+extension AppDelegate: MessagingDelegate {
+    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+        print("PUSH: Firebase registration token: \(fcmToken)")
+    }
+    
+  
+    func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
+        print("PUSH: Received data message: \(remoteMessage.appData)")
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        print("PUSH: Messaging did receive FCM token \(fcmToken)")
+        
+        // if user has push enabled but toggled notifications off in defaults, disable FCM token
+        APIService().storeFCMToken(fcmToken) { (result, error) in
+            print("Result \(result) error \(error)")
+        }
+    }
+}
+
+// messages actually come through here
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    // Receive displayed notifications for iOS 10 devices.
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
+        // FCM: when a user receives a push notification while foregrounded
+        
+        let userInfo = notification.request.content.userInfo
+        
+        print("PUSH: willPresent notification with userInfo \(userInfo)")
+        
+        // With swizzling disabled you must let Messaging know about the message, for Analytics
+        
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+        // Print message ID.
+//        if let messageID = userInfo[gcmMessageIDKey] {
+//            print("Message ID: \(messageID)")
+//        }
+        
+        // Print full message.
+        print(userInfo)
+
+        // Change this to your preferred presentation option
+        completionHandler([])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+        let userInfo = response.notification.request.content.userInfo
+        
+        // FCM: when a user clicks on a notification while in the background
+        
+        print("PUSH: didReceive response")
+//        // Print message ID.
+//        if let messageID = userInfo[gcmMessageIDKey] {
+//            print("Message ID: \(messageID)")
+//        }
+        
+        // Print full message.
+        print(userInfo)
+        
+        completionHandler()
+    }
+    
+}

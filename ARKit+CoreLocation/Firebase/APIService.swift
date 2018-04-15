@@ -64,6 +64,23 @@ class APIService: NSObject {
         let task = urlSession?.dataTask(with: request)
         task?.resume()
     }
+    
+    func storeFCMToken(_ token: String, completion: cloudCompletionHandler?) {
+        let urlString = "https://codefest2018.herokuapp.com/token"
+        guard let requestUrl = URL(string:urlString) else { return }
+        var request = URLRequest(url:requestUrl)
+        
+        let params = ["token": token]
+        request.httpMethod = "POST"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        
+        try! request.httpBody = JSONSerialization.data(withJSONObject: params, options: [])
+        
+        let task = urlSession?.dataTask(with: request)
+        task?.resume()
+        
+        self.completionHandler = completion
+    }
 }
 
 extension APIService: URLSessionDelegate, URLSessionDataDelegate {

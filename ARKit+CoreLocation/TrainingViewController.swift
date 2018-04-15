@@ -47,8 +47,13 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
     @IBOutlet weak var buttonSafe: UIButton!
     var safeTimer: Timer?
     
+    @IBOutlet weak var constraintTimerTopOffset: NSLayoutConstraint!
+    @IBOutlet weak var labelDoubleTap: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshOnNotification), name: Notification.Name.RemoteNotificationReceived, object: nil)
         
         infoLabel.font = UIFont.systemFont(ofSize: 10)
         infoLabel.textAlignment = .left
@@ -73,6 +78,10 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
         sceneLocationView.showAxesNode = true
         sceneLocationView.locationDelegate = self
         
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleGesture(_:)))
+        doubleTap.numberOfTapsRequired = 2
+        sceneLocationView.addGestureRecognizer(doubleTap)
+        
         if displayDebugging {
             sceneLocationView.showFeaturePoints = true
         }
@@ -87,7 +96,13 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
             }
         }
         
+        labelDoubleTap.isHidden = true
         startTimer()
+    }
+    
+    @objc fileprivate func handleGesture(_ gesture: Any) {
+        print("double tap")
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
     fileprivate func toggleMap() {
@@ -145,6 +160,8 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
     @IBAction func didClickSafe(_ sender: Any) {
         stopTimer()
         safeTimer = nil
+        labelDoubleTap.isHidden = false
+        constraintTimerTopOffset.constant = labelDoubleTap.frame.origin.y
     }
     
     fileprivate func startTimer() {
@@ -364,6 +381,12 @@ extension UIView {
 }
 
 extension TrainingViewController {
+    @objc func refreshOnNotification() {
+        print("Calling refreshOnNotification")
+        refresh {
+            
+        }
+    }
     func refresh(completion:@escaping (()->Void)) {
         for node in sceneLocationView.locationNodes {
             sceneLocationView.removeLocationNode(locationNode: node)

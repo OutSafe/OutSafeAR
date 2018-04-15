@@ -218,20 +218,35 @@
                                     <action selector="didClickSafe:" destination="eXD-Fn-cqL" eventType="touchUpInside" id="Rp5-Ht-rJM"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0yq-KJ-sGa">
+                                <rect key="frame" x="0.0" y="310" width="375" height="48"/>
+                                <string key="text">You Made It!
+Double Tap to Reset Training Session</string>
+                                <fontDescription key="fontDescription" name="AmericanTypewriter-Bold" family="American Typewriter" pointSize="19"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="29a-IV-fDX" firstAttribute="leading" secondItem="ybf-VC-Oi3" secondAttribute="leading" id="Cns-4c-zv9"/>
+                            <constraint firstItem="0yq-KJ-sGa" firstAttribute="trailing" secondItem="ybf-VC-Oi3" secondAttribute="trailing" id="HuT-QL-Wsk"/>
                             <constraint firstAttribute="bottom" secondItem="29a-IV-fDX" secondAttribute="bottom" id="X32-GC-REO"/>
+                            <constraint firstItem="0yq-KJ-sGa" firstAttribute="centerX" secondItem="LLQ-Kr-SN2" secondAttribute="centerX" id="keo-LA-9FT"/>
+                            <constraint firstItem="0yq-KJ-sGa" firstAttribute="leading" secondItem="ybf-VC-Oi3" secondAttribute="leading" id="l8b-we-vcW"/>
                             <constraint firstItem="XOK-ut-XzH" firstAttribute="leading" secondItem="ybf-VC-Oi3" secondAttribute="leading" id="mcD-em-8fU"/>
                             <constraint firstItem="ybf-VC-Oi3" firstAttribute="trailing" secondItem="XOK-ut-XzH" secondAttribute="trailing" id="vEk-SQ-qgD"/>
                             <constraint firstItem="ybf-VC-Oi3" firstAttribute="trailing" secondItem="29a-IV-fDX" secondAttribute="trailing" id="vQc-w2-gJS"/>
+                            <constraint firstItem="0yq-KJ-sGa" firstAttribute="centerY" secondItem="LLQ-Kr-SN2" secondAttribute="centerY" id="yB6-GP-1ef"/>
                             <constraint firstItem="XOK-ut-XzH" firstAttribute="top" secondItem="ybf-VC-Oi3" secondAttribute="top" id="yZ4-RY-j9S"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ybf-VC-Oi3"/>
                     </view>
                     <connections>
                         <outlet property="buttonSafe" destination="29a-IV-fDX" id="OlQ-78-FWB"/>
+                        <outlet property="constraintTimerTopOffset" destination="yZ4-RY-j9S" id="cw0-hZ-k0X"/>
+                        <outlet property="labelDoubleTap" destination="0yq-KJ-sGa" id="1SA-bC-Wqm"/>
                         <outlet property="labelTimer" destination="XOK-ut-XzH" id="nDL-6l-231"/>
                     </connections>
                 </viewController>
