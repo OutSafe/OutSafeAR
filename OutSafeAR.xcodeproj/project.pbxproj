@@ -35,7 +35,7 @@
 		38104A8494954E9B79241EAE /* Pods-ARKit+CoreLocation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARKit+CoreLocation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ARKit+CoreLocation/Pods-ARKit+CoreLocation.debug.xcconfig"; sourceTree = "<group>"; };
 		4901EF041F1B7D560067870D /* SceneLocationEstimate+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneLocationEstimate+Extensions.swift"; sourceTree = "<group>"; };
 		49099E381F24BAE5007B76FD /* SCNVector3+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNVector3+Extensions.swift"; sourceTree = "<group>"; };
-		49A3FBD81F09988100AA59C8 /* ARKit+CoreLocation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ARKit+CoreLocation.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		49A3FBD81F09988100AA59C8 /* OutSafeAR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OutSafeAR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49A3FBDB1F09988100AA59C8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		49A3FBDF1F09988100AA59C8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		49A3FBE41F09988100AA59C8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -85,7 +85,7 @@
 		49A3FBD91F09988100AA59C8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				49A3FBD81F09988100AA59C8 /* ARKit+CoreLocation.app */,
+				49A3FBD81F09988100AA59C8 /* OutSafeAR.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -155,9 +155,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		49A3FBD71F09988100AA59C8 /* ARKit+CoreLocation */ = {
+		49A3FBD71F09988100AA59C8 /* OutSafeAR */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 49A3FBEC1F09988100AA59C8 /* Build configuration list for PBXNativeTarget "ARKit+CoreLocation" */;
+			buildConfigurationList = 49A3FBEC1F09988100AA59C8 /* Build configuration list for PBXNativeTarget "OutSafeAR" */;
 			buildPhases = (
 				63B0FABA6912CCD1470FF302 /* [CP] Check Pods Manifest.lock */,
 				49A3FBD41F09988100AA59C8 /* Sources */,
@@ -169,9 +169,9 @@
 			);
 			dependencies = (
 			);
-			name = "ARKit+CoreLocation";
+			name = OutSafeAR;
 			productName = "ARKit+CoreLocation";
-			productReference = 49A3FBD81F09988100AA59C8 /* ARKit+CoreLocation.app */;
+			productReference = 49A3FBD81F09988100AA59C8 /* OutSafeAR.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -189,7 +189,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 49A3FBD31F09988100AA59C8 /* Build configuration list for PBXProject "ARKit+CoreLocation" */;
+			buildConfigurationList = 49A3FBD31F09988100AA59C8 /* Build configuration list for PBXProject "OutSafeAR" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -202,7 +202,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				49A3FBD71F09988100AA59C8 /* ARKit+CoreLocation */,
+				49A3FBD71F09988100AA59C8 /* OutSafeAR */,
 			);
 		};
 /* End PBXProject section */
@@ -437,7 +437,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		49A3FBD31F09988100AA59C8 /* Build configuration list for PBXProject "ARKit+CoreLocation" */ = {
+		49A3FBD31F09988100AA59C8 /* Build configuration list for PBXProject "OutSafeAR" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				49A3FBEA1F09988100AA59C8 /* Debug */,
@@ -446,7 +446,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		49A3FBEC1F09988100AA59C8 /* Build configuration list for PBXNativeTarget "ARKit+CoreLocation" */ = {
+		49A3FBEC1F09988100AA59C8 /* Build configuration list for PBXNativeTarget "OutSafeAR" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				49A3FBED1F09988100AA59C8 /* Debug */,
