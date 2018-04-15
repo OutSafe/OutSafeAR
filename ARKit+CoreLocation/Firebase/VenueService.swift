@@ -39,11 +39,12 @@ class VenueService: NSObject {
         let label = dict["label"] as? String
         if let exitType = dict["type"] as? String, let type = ExitType(rawValue: exitType) {
             let status = dict["status"] as? Int ?? 0
-            return Exit(id: id, lat: lat, lon: lon, el: el, status: status, type: type)
+            return Exit(id: id, lat: lat, lon: lon, el: el, status: status, exitType: type)
         } else if let eventType = dict["eventType"] as? String, let type = EventType(rawValue: eventType) {
             return Event(id: id, lat: lat, lon: lon, el: el, eventType: type)
         } else {
-            return Landmark(id: id, lat: lat, lon: lon, el: el, label: label)
+            let type: LandmarkType = label == nil ? LandmarkType.corner : LandmarkType.other
+            return Landmark(id: id, lat: lat, lon: lon, el: el, landmarkType: type, label: label)
         }
     }
 }

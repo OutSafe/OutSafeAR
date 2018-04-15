@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MapKit
 
 enum PinnableType: String {
     // landmarks
@@ -46,6 +47,7 @@ struct Landmark: Pinnable {
     var lat: Double
     var lon: Double
     var el: Double
+    var landmarkType: LandmarkType
     let label: String?
 }
 
@@ -55,7 +57,7 @@ struct Exit: Pinnable {
     var lon: Double
     var el: Double
     let status: Int
-    let type: ExitType
+    let exitType: ExitType
 }
 
 struct Event: Pinnable {
@@ -64,4 +66,35 @@ struct Event: Pinnable {
     var lon: Double
     var el: Double
     let eventType: EventType
+}
+
+class PinnableAnnotation: MKPointAnnotation {
+    var pin: Pinnable!
+    var image: UIImage? {
+        if let pin = pin as? Landmark {
+            return UIImage(named: "iconPin")
+        } else if let pin = pin as? Exit {
+            return UIImage(named: "iconDoor")
+        } else if let pin = pin as? Event {
+            if pin.eventType == .fire {
+                return UIImage(named: "iconFire")
+            } else {
+                return UIImage(named: "iconGun")
+            }
+        }
+        return nil
+    }
+}
+
+extension UIImage {
+    func resized(newSize: CGSize) -> UIImage? {
+        // Guard newSize is different
+        guard self.size != newSize else { return self }
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0);
+        self.draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
+        let newImage: UIImage? = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
+    }
 }

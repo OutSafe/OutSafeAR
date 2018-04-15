@@ -34,7 +34,8 @@ class SetupViewController: UIViewController {
     }
     
     // Data
-    var annotations: [String: MKAnnotation] = [String: MKAnnotation]()
+    var annotations: [String: PinnableAnnotation] = [String: PinnableAnnotation]()
+    var pins: [String: Pinnable] = [String: Pinnable]()
     let locationManager = LocationManager.shared
     
     override func viewDidLoad() {
@@ -55,6 +56,7 @@ class SetupViewController: UIViewController {
         for (key, value) in annotations {
             mapView.removeAnnotation(value)
             annotations[key] = nil
+            pins.removeAll()
         }
         VenueService.getPins(type: .landmark, completion: { (resultDict) in
             DispatchQueue.main.async {
@@ -85,7 +87,9 @@ class SetupViewController: UIViewController {
     }
 
     func addAnnotation(id: String, pin: Pinnable) {
-        let annotation = MKPointAnnotation()
+        let annotation = PinnableAnnotation()
+        annotation.pin = pin
+        
         let coordinate = CLLocationCoordinate2DMake(pin.lat, pin.lon)
         annotation.coordinate = coordinate
         if let title = (pin as? Landmark)?.label {
@@ -93,11 +97,13 @@ class SetupViewController: UIViewController {
         }
         if let type = (pin as? Event)?.eventType {
             annotation.subtitle = type.rawValue
-        } else if let type = (pin as? Exit)?.type {
+        } else if let type = (pin as? Exit)?.exitType {
             annotation.subtitle = type.rawValue
         }
         mapView.addAnnotation(annotation)
+        
         annotations[id] = annotation
+        pins[id] = pin
     }
     
     @IBAction func didClickButton(_ sender: UIButton) {
@@ -210,6 +216,34 @@ extension SetupViewController: MKMapViewDelegate {
                 
             }
         }
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let identifier = "MyPin"
+        
+        if annotation is MKUserLocation {
+            return nil
+        }
+        
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        
+        if annotationView == nil {
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+            
+            if let pinAnnotation = annotation as? PinnableAnnotation {
+                annotationView?.image = pinAnnotation.image?.resized(newSize: CGSize(width: 20, height: 20))
+            }
+            
+            // if you want a disclosure button, you'd might do something like:
+            //
+            // let detailButton = UIButton(type: .detailDisclosure)
+            // annotationView?.rightCalloutAccessoryView = detailButton
+        } else {
+            annotationView?.annotation = annotation
+        }
+        
+        return annotationView
     }
 }
 
