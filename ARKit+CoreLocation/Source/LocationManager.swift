@@ -23,6 +23,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     private var locationManager: CLLocationManager?
     
     var currentLocation: CLLocation?
+    var bestLocation: CLLocation?
     
     var heading: CLLocationDirection?
     var headingAccuracy: CLLocationDegrees?

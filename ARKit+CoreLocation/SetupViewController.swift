@@ -14,8 +14,10 @@ class SetupViewController: UIViewController {
     var sessionId: String!
     
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var buttonStart: UIButton!
+    
     // Data
-    var annotations: [String: MKAnnotation] = [String:MKAnnotation]()
+    var annotations: [MKAnnotation] = [MKAnnotation]()
     let locationManager = LocationManager.shared
     
     override func viewDidLoad() {
@@ -32,27 +34,48 @@ class SetupViewController: UIViewController {
         mapView.setRegion(region, animated: true)
     }
     
-//    func addAnnotation() {
-//        guard let lat = event.lat, let lon = event.lon else { return }
-//        if let oldAnnotation = annotations[event.id] {
-//            mapView.removeAnnotations([oldAnnotation])
-//        }
-//
-//        let annotation = MKPointAnnotation()
-//        let coordinate = CLLocationCoordinate2DMake(lat, lon)
-//        annotation.coordinate = coordinate
-//        annotation.title = event.name
-//        annotation.subtitle = event.locationString
-//        mapView.addAnnotation(annotation)
-//
-//        annotations[event.id] = annotation
-//    }
+    func refresh(completion:@escaping (()->Void)) {
+        mapView.removeAnnotations(annotations)
+        VenueService.getBuilding { (pins) in
+            DispatchQueue.main.async {
+                for pin in pins {
+                    self.addAnnotation(pin: pin)
+                }
+                completion()
+            }
+        }
+    }
+
+    func addAnnotation(pin: Pinnable) {
+        let annotation = MKPointAnnotation()
+        let coordinate = CLLocationCoordinate2DMake(pin.lat, pin.lon)
+        annotation.coordinate = coordinate
+        if let title = (pin as? Landmark)?.label {
+            annotation.title = title
+        }
+        if let type = (pin as? Event)?.eventType {
+            annotation.subtitle = type
+        } else if let type = (pin as? Exit)?.type {
+            annotation.subtitle = type
+        }
+        mapView.addAnnotation(annotation)
+    }
 }
 
 extension SetupViewController: LocationManagerDelegate {
     func locationManagerDidUpdateLocation(_ locationManager: LocationManager, location: CLLocation) {
         if first, let location = locationManager.currentLocation {
             centerMapOnLocation(location: location)
+        }
+        
+        if location.horizontalAccuracy < 15 {
+            print("Location accuracy: ready (\(location.horizontalAccuracy))")
+            buttonStart.isEnabled = true
+            buttonStart.alpha = 1
+        } else {
+            print("Location accuracy: not ready (\(location.horizontalAccuracy))")
+            buttonStart.isEnabled = false
+            buttonStart.alpha = 0.5
         }
     }
     
@@ -85,14 +108,13 @@ extension SetupViewController: MKMapViewDelegate {
 //    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
 //        guard let selectedAnnotation = view.annotation else { return }
 //        var selectedId: String?
-//        for (eventId, annotation) in annotations {
+//        for annotation in annotations {
 //            if annotation.title! == selectedAnnotation.title! && annotation.coordinate.latitude == selectedAnnotation.coordinate.latitude && annotation.coordinate.longitude == selectedAnnotation.coordinate.longitude {
-//                selectedId = eventId
 //                break
 //            }
 //        }
 //    }
-//    
+//
 //    func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
 //    }
 }

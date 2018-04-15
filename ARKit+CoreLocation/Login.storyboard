@@ -76,17 +76,37 @@
                                     <outlet property="delegate" destination="VKf-Xo-pMX" id="APo-Ws-VAc"/>
                                 </connections>
                             </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bjl-E8-F35">
+                                <rect key="frame" x="305" y="597" width="50" height="50"/>
+                                <color key="backgroundColor" red="0.83921568629999999" green="0.15686274510000001" blue="0.15686274510000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="8zL-hJ-Tbb"/>
+                                    <constraint firstAttribute="width" constant="50" id="uKM-bo-bKV"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="34"/>
+                                <state key="normal" title="+">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="25"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="sEh-su-JlR" firstAttribute="bottom" secondItem="bjl-E8-F35" secondAttribute="bottom" constant="20" id="1ma-ej-W9a"/>
                             <constraint firstItem="miv-e8-RCg" firstAttribute="bottom" secondItem="sEh-su-JlR" secondAttribute="bottom" id="BMp-Xu-Rgi"/>
                             <constraint firstItem="miv-e8-RCg" firstAttribute="top" secondItem="km9-RH-bkw" secondAttribute="top" id="IdX-BY-aJc"/>
                             <constraint firstItem="miv-e8-RCg" firstAttribute="trailing" secondItem="sEh-su-JlR" secondAttribute="trailing" id="RO0-1I-zVr"/>
+                            <constraint firstItem="sEh-su-JlR" firstAttribute="trailing" secondItem="bjl-E8-F35" secondAttribute="trailing" constant="20" id="rqK-cN-EVJ"/>
                             <constraint firstItem="miv-e8-RCg" firstAttribute="leading" secondItem="sEh-su-JlR" secondAttribute="leading" id="vx1-Uj-GNG"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="sEh-su-JlR"/>
                     </view>
                     <connections>
+                        <outlet property="buttonStart" destination="bjl-E8-F35" id="mCz-mf-hdh"/>
                         <outlet property="mapView" destination="miv-e8-RCg" id="jKJ-3S-cjB"/>
                     </connections>
                 </viewController>
