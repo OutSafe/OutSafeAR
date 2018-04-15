@@ -48,7 +48,7 @@ struct Event: Pinnable {
 class VenueService: NSObject {
     class func getBuilding(completion: @escaping ((_ pins: [Pinnable])->Void)) {
         let service = APIService()
-        service.cloudFunction(id: "3", functionName: "landmark", method: "GET", params: nil) { (result, error) in
+        service.cloudFunction(id: "6", functionName: "landmark", method: "GET", params: nil) { (result, error) in
             print("Result \(result) error \(error)")
             if let results = result as? [String: [String: Any]] {
                 var pins: [Pinnable] = []

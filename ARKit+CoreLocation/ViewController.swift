@@ -1,3 +1,6 @@
+
+
+
 //
 //  ViewController.swift
 //  ARKit+CoreLocation
@@ -23,7 +26,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     
     ///Whether to show a map view
     ///The initial value is respected
-    var showMapView: Bool = false
+    var showMapView = false
     
     var centerMapOnUserLocation: Bool = true
     
@@ -36,7 +39,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     
     var updateInfoLabelTimer: Timer?
     
-    var adjustNorthByTappingSidesOfScreen = false
+    var adjustNorthByTappingSidesOfScreen = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,22 +72,25 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         // CODEFEST 2018
         refresh {
             self.view.addSubview(self.sceneLocationView)
-        }
-        
-        if showMapView {
-            mapView.delegate = self
-            mapView.showsUserLocation = true
-            mapView.alpha = 0.8
-            view.addSubview(mapView)
             
-            updateUserLocationTimer = Timer.scheduledTimer(
-                timeInterval: 0.5,
-                target: self,
-                selector: #selector(ViewController.updateUserLocation),
-                userInfo: nil,
-                repeats: true)
+            if self.showMapView {
+                self.toggleMap()
+            }
         }
+    }
+    
+    fileprivate func toggleMap() {
+        mapView.delegate = self
+        mapView.showsUserLocation = true
+        mapView.alpha = 0.8
+        view.addSubview(mapView)
         
+        updateUserLocationTimer = Timer.scheduledTimer(
+            timeInterval: 0.5,
+            target: self,
+            selector: #selector(ViewController.updateUserLocation),
+            userInfo: nil,
+            repeats: true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
