@@ -50,7 +50,7 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
     ///Not advisable to change this as the scene is ongoing.
     public var locationEstimateMethod: LocationEstimateMethod = .mostRelevantEstimate
     
-    let locationManager = LocationManager()
+    let locationManager = LocationManager.shared
     ///When set to true, displays an axes node at the start of the scene
     public var showAxesNode = false
     

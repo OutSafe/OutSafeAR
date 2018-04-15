@@ -17,6 +17,7 @@ protocol LocationManagerDelegate: class {
 ///Handles retrieving the location and heading from CoreLocation
 ///Does not contain anything related to ARKit or advanced location
 class LocationManager: NSObject, CLLocationManagerDelegate {
+    static let shared = LocationManager()
     weak var delegate: LocationManagerDelegate?
     
     private var locationManager: CLLocationManager?

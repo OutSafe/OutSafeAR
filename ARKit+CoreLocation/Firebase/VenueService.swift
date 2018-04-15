@@ -8,43 +8,6 @@
 
 import UIKit
 
-enum ExitType {
-    case saferoom
-    case door
-}
-
-protocol Pinnable {
-    var id: String { get }
-    var lat: Double { get }
-    var lon: Double { get }
-    var el: Double { get }
-}
-
-struct Landmark: Pinnable {
-    var id: String
-    var lat: Double
-    var lon: Double
-    var el: Double
-    let label: String?
-}
-
-struct Exit: Pinnable {
-    var id: String
-    var lat: Double
-    var lon: Double
-    var el: Double
-    let type: String
-}
-
-struct Event: Pinnable {
-    var id: String
-    var lat: Double
-    var lon: Double
-    var el: Double
-    let status: Int
-    let eventType: String
-}
-
 class VenueService: NSObject {
     class func getBuilding(completion: @escaping ((_ pins: [Pinnable])->Void)) {
         let service = APIService()
