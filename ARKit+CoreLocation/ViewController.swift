@@ -26,7 +26,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     
     ///Whether to show a map view
     ///The initial value is respected
-    var showMapView = false
+    var showMapView = true
     
     var centerMapOnUserLocation: Bool = true
     
@@ -69,9 +69,10 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
             sceneLocationView.showFeaturePoints = true
         }
 
+        self.view.addSubview(self.sceneLocationView)
+
         // CODEFEST 2018
         refresh {
-            self.view.addSubview(self.sceneLocationView)
             
             if self.showMapView {
                 self.toggleMap()
@@ -289,6 +290,11 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {
         
     }
+    
+    func sceneLocationViewDidUpdateHeading(heading: CLLocationDirection) {
+        mapView.camera.heading = heading
+        mapView.setCamera(mapView.camera, animated: true)
+    }
 }
 
 extension DispatchQueue {
@@ -347,7 +353,7 @@ extension ViewController {
     func addLandmark(pin: Pinnable) {
         let lat = pin.lat
         let lon = pin.lon
-        let altitude = pin.el + 21
+        let altitude = 22.0 // pin.el // basically by default
         let label: String
         if let landmark = pin as? Landmark, let text = landmark.label {
             label = text
@@ -359,8 +365,8 @@ extension ViewController {
         
         let pinCoordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
         let pinLocation = CLLocation(coordinate: pinCoordinate, altitude: altitude)
-        let pinImage = UIImage(named: "pin")!
-        let pinLocationNode = LocationAnnotationNode(location: pinLocation, image: pinImage)
+        let pinImage = pin.image ?? UIImage(named: "pin")!
+        let pinLocationNode = LocationAnnotationNode(location: pinLocation, image: pinImage.resized(newSize: CGSize(width: 50, height: 50))!)
         sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: pinLocationNode)
     }
 }

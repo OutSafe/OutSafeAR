@@ -40,6 +40,7 @@ protocol Pinnable {
     var lat: Double { get }
     var lon: Double { get }
     var el: Double { get }
+    var image: UIImage? { get }
 }
 
 struct Landmark: Pinnable {
@@ -49,6 +50,10 @@ struct Landmark: Pinnable {
     var el: Double
     var landmarkType: LandmarkType
     let label: String?
+    
+    var image: UIImage? {
+        return UIImage(named: "iconPin")
+    }
 }
 
 struct Exit: Pinnable {
@@ -58,6 +63,9 @@ struct Exit: Pinnable {
     var el: Double
     let status: Int
     let exitType: ExitType
+    var image: UIImage? {
+        return UIImage(named: "iconDoor")
+    }
 }
 
 struct Event: Pinnable {
@@ -66,23 +74,19 @@ struct Event: Pinnable {
     var lon: Double
     var el: Double
     let eventType: EventType
+    var image: UIImage? {
+        if eventType == .fire {
+            return UIImage(named: "iconFire")
+        } else {
+            return UIImage(named: "iconGun")
+        }
+    }
 }
 
 class PinnableAnnotation: MKPointAnnotation {
     var pin: Pinnable!
     var image: UIImage? {
-        if let pin = pin as? Landmark {
-            return UIImage(named: "iconPin")
-        } else if let pin = pin as? Exit {
-            return UIImage(named: "iconDoor")
-        } else if let pin = pin as? Event {
-            if pin.eventType == .fire {
-                return UIImage(named: "iconFire")
-            } else {
-                return UIImage(named: "iconGun")
-            }
-        }
-        return nil
+        return pin.image
     }
 }
 

@@ -28,7 +28,6 @@
 		8EEB1C1F2083054B00FE4209 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EEB1C1E2083054B00FE4209 /* Login.storyboard */; };
 		8EEB1C2220830BDD00FE4209 /* SetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EEB1C2120830BDD00FE4209 /* SetupViewController.swift */; };
 		8EEB1C2420830D2000FE4209 /* Pinnable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EEB1C2320830D2000FE4209 /* Pinnable.swift */; };
-		8EEB1C262083199300FE4209 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8EEB1C252083199300FE4209 /* Media.xcassets */; };
 		D8C205D11F5B197200675E6E /* NotSupportedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C205D01F5B197200675E6E /* NotSupportedViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -57,7 +56,6 @@
 		8EEB1C1E2083054B00FE4209 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
 		8EEB1C2120830BDD00FE4209 /* SetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupViewController.swift; sourceTree = "<group>"; };
 		8EEB1C2320830D2000FE4209 /* Pinnable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pinnable.swift; sourceTree = "<group>"; };
-		8EEB1C252083199300FE4209 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		A967016A4C9D5DA8BF8AE438 /* Pods-ARKit+CoreLocation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARKit+CoreLocation.release.xcconfig"; path = "Pods/Target Support Files/Pods-ARKit+CoreLocation/Pods-ARKit+CoreLocation.release.xcconfig"; sourceTree = "<group>"; };
 		D8C205D01F5B197200675E6E /* NotSupportedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotSupportedViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -106,7 +104,6 @@
 				8EEB1C1E2083054B00FE4209 /* Login.storyboard */,
 				8EEB1C1C2083051F00FE4209 /* LoginViewController.swift */,
 				8EEB1C2120830BDD00FE4209 /* SetupViewController.swift */,
-				8EEB1C252083199300FE4209 /* Media.xcassets */,
 			);
 			path = "ARKit+CoreLocation";
 			sourceTree = "<group>";
@@ -217,7 +214,6 @@
 			files = (
 				49A3FBE81F09988100AA59C8 /* LaunchScreen.storyboard in Resources */,
 				49A3FBE51F09988100AA59C8 /* Assets.xcassets in Resources */,
-				8EEB1C262083199300FE4209 /* Media.xcassets in Resources */,
 				8EEB1C1F2083054B00FE4209 /* Login.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

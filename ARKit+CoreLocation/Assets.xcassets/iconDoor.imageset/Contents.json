@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "iconDoor.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "iconPin.png",
       "scale" : "2x"
     },
     {

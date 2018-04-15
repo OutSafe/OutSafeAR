@@ -131,7 +131,7 @@ class SetupViewController: UIViewController {
     }
 
     fileprivate func goToTraining() {
-        
+        performSegue(withIdentifier: "toARView", sender: nil)
     }
     
     fileprivate func goToAddPin() {
