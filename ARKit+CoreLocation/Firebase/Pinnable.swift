@@ -52,6 +52,9 @@ struct Landmark: Pinnable {
     let label: String?
     
     var image: UIImage? {
+        if let label = label, !label.isEmpty {
+            return UIImage(named: "iconLandmark")
+        }
         return UIImage(named: "iconPin")
     }
 }
