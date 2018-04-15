@@ -22,10 +22,10 @@ class SetupViewController: UIViewController {
     var currentAccuracy: Double = 0 {
         didSet {
             if locationIsAccurate {
-                print("Location accuracy: ready (\(currentAccuracy))")
+//                print("Location accuracy: ready (\(currentAccuracy))")
                 buttonStart.alpha = 1
             } else {
-                print("Location accuracy: not ready (\(currentAccuracy))")
+//                print("Location accuracy: not ready (\(currentAccuracy))")
                 buttonStart.alpha = 0.5
             }
         }
@@ -80,7 +80,7 @@ class SetupViewController: UIViewController {
         if locationIsAccurate {
             showButtonOptions()
         } else {
-            let alert = UIAlertController(title: "Warning: Location inaccurate", message: "Your location accuracy is currently at \(currentAccuracy). Lower accuracy (<15) will help with a better experience. Continue?", preferredStyle: UIAlertControllerStyle.alert)
+            let alert = UIAlertController(title: "Warning: Location inaccurate", message: "Your location accuracy is currently at \(Int(currentAccuracy)). Lower accuracy (<15) will help with a better experience. Continue?", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Wait", style: .default, handler: { (action) in
                 self.showButtonOptions()
             }))
@@ -127,6 +127,9 @@ extension SetupViewController: MKMapViewDelegate {
         if first {
             first = false
             centerMapOnLocation(location: location)
+            refresh {
+                
+            }
         }
     }
 
