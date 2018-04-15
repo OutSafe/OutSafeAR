@@ -65,7 +65,7 @@
         <!--Setup View Controller-->
         <scene sceneID="Jdv-Zj-edX">
             <objects>
-                <viewController id="VKf-Xo-pMX" customClass="SetupViewController" customModule="OutSafeAR" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="VKf-Xo-pMX" customClass="ARSetupViewController" customModule="OutSafeAR" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="km9-RH-bkw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -135,26 +135,49 @@
                                     <action selector="didClickButton:" destination="VKf-Xo-pMX" eventType="touchUpInside" id="iI1-GI-NRA"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uar-MS-3wm">
+                                <rect key="frame" x="20" y="539" width="50" height="50"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="4zR-Rh-0Vx"/>
+                                    <constraint firstAttribute="height" constant="50" id="bCS-Gl-yJO"/>
+                                </constraints>
+                                <state key="normal" image="iconMap">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="25"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="didClickMap:" destination="VKf-Xo-pMX" eventType="touchUpInside" id="x2Q-ag-Nh5"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="sEh-su-JlR" firstAttribute="bottom" secondItem="bjl-E8-F35" secondAttribute="bottom" constant="20" id="1ma-ej-W9a"/>
+                            <constraint firstItem="1XN-qH-SeG" firstAttribute="top" secondItem="uar-MS-3wm" secondAttribute="bottom" constant="8" id="6f3-0V-lJ5"/>
                             <constraint firstItem="sEh-su-JlR" firstAttribute="bottom" secondItem="1XN-qH-SeG" secondAttribute="bottom" constant="20" id="8EV-uX-WBa"/>
-                            <constraint firstItem="miv-e8-RCg" firstAttribute="bottom" secondItem="sEh-su-JlR" secondAttribute="bottom" id="BMp-Xu-Rgi"/>
-                            <constraint firstItem="miv-e8-RCg" firstAttribute="top" secondItem="km9-RH-bkw" secondAttribute="top" id="IdX-BY-aJc"/>
                             <constraint firstItem="sEh-su-JlR" firstAttribute="trailing" secondItem="bjl-E8-F35" secondAttribute="trailing" constant="16" id="Mw6-10-brD"/>
                             <constraint firstItem="sEh-su-JlR" firstAttribute="trailing" secondItem="jXi-Y5-K7o" secondAttribute="trailing" constant="16" id="Nsf-N7-2IV"/>
                             <constraint firstItem="bjl-E8-F35" firstAttribute="top" secondItem="jXi-Y5-K7o" secondAttribute="bottom" constant="8" id="P5Q-LE-OzA"/>
                             <constraint firstItem="miv-e8-RCg" firstAttribute="trailing" secondItem="sEh-su-JlR" secondAttribute="trailing" id="RO0-1I-zVr"/>
+                            <constraint firstItem="uar-MS-3wm" firstAttribute="leading" secondItem="sEh-su-JlR" secondAttribute="leading" constant="20" id="X5t-y0-fBS"/>
+                            <constraint firstAttribute="bottom" secondItem="miv-e8-RCg" secondAttribute="bottom" id="YJg-TX-Ekk"/>
                             <constraint firstItem="1XN-qH-SeG" firstAttribute="leading" secondItem="sEh-su-JlR" secondAttribute="leading" constant="20" id="bq0-Sc-QLA"/>
+                            <constraint firstItem="miv-e8-RCg" firstAttribute="top" secondItem="km9-RH-bkw" secondAttribute="top" id="tL0-BN-sWd"/>
                             <constraint firstItem="miv-e8-RCg" firstAttribute="leading" secondItem="sEh-su-JlR" secondAttribute="leading" id="vx1-Uj-GNG"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="sEh-su-JlR"/>
                     </view>
                     <connections>
                         <outlet property="buttonBang" destination="jXi-Y5-K7o" id="KLF-Mh-Mfp"/>
+                        <outlet property="buttonMap" destination="uar-MS-3wm" id="RHo-bC-6We"/>
                         <outlet property="buttonPlay" destination="1XN-qH-SeG" id="Wzs-Yp-h5l"/>
                         <outlet property="buttonPlus" destination="bjl-E8-F35" id="vQP-RR-yUH"/>
+                        <outlet property="constraintMapTopOffset" destination="tL0-BN-sWd" id="H1l-Dj-o50"/>
                         <outlet property="mapView" destination="miv-e8-RCg" id="jKJ-3S-cjB"/>
                         <segue destination="eXD-Fn-cqL" kind="show" identifier="toARView" id="XZ1-K7-gMe"/>
                     </connections>
@@ -180,6 +203,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="play" width="1070" height="1071"/>
+        <image name="iconMap" width="256" height="256"/>
+        <image name="play" width="2140" height="2143"/>
     </resources>
 </document>

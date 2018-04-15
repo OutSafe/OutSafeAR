@@ -21,12 +21,13 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     let mapView = MKMapView()
     var userAnnotation: MKPointAnnotation?
     var locationEstimateAnnotation: MKPointAnnotation?
-    
+    var annotations: [PinnableAnnotation] = [PinnableAnnotation]()
+
     var updateUserLocationTimer: Timer?
     
     ///Whether to show a map view
     ///The initial value is respected
-    var showMapView = true
+    var showMapView = false
     
     var centerMapOnUserLocation: Bool = true
     
@@ -247,29 +248,56 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     
     //MARK: MKMapViewDelegate
     
+//    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+//        if annotation is MKUserLocation {
+//            return nil
+//        }
+//
+//        if let pointAnnotation = annotation as? MKPointAnnotation {
+//            let marker = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: nil)
+//
+//            if pointAnnotation == self.userAnnotation {
+//                marker.displayPriority = .required
+//                marker.glyphImage = UIImage(named: "user")
+//            } else {
+//                marker.displayPriority = .required
+//                marker.markerTintColor = UIColor(hue: 0.267, saturation: 0.67, brightness: 0.77, alpha: 1.0)
+//                marker.glyphImage = UIImage(named: "compass")
+//            }
+//
+//            return marker
+//        }
+//
+//        return nil
+//    }
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let identifier = "MyPin"
+        
         if annotation is MKUserLocation {
             return nil
         }
         
-        if let pointAnnotation = annotation as? MKPointAnnotation {
-            let marker = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: nil)
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        
+        if annotationView == nil {
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
             
-            if pointAnnotation == self.userAnnotation {
-                marker.displayPriority = .required
-                marker.glyphImage = UIImage(named: "user")
-            } else {
-                marker.displayPriority = .required
-                marker.markerTintColor = UIColor(hue: 0.267, saturation: 0.67, brightness: 0.77, alpha: 1.0)
-                marker.glyphImage = UIImage(named: "compass")
+            if let pinAnnotation = annotation as? PinnableAnnotation {
+                annotationView?.image = pinAnnotation.image?.resized(newSize: CGSize(width: 20, height: 20))
             }
             
-            return marker
+            // if you want a disclosure button, you'd might do something like:
+            //
+            // let detailButton = UIButton(type: .detailDisclosure)
+            // annotationView?.rightCalloutAccessoryView = detailButton
+        } else {
+            annotationView?.annotation = annotation
         }
         
-        return nil
+        return annotationView
     }
-    
+
     //MARK: SceneLocationViewDelegate
     
     func sceneLocationViewDidAddSceneLocationEstimate(sceneLocationView: SceneLocationView, position: SCNVector3, location: CLLocation) {
@@ -292,8 +320,8 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     }
     
     func sceneLocationViewDidUpdateHeading(heading: CLLocationDirection) {
-        mapView.camera.heading = heading
-        mapView.setCamera(mapView.camera, animated: true)
+//        mapView.camera.heading = heading
+//        mapView.setCamera(mapView.camera, animated: true)
     }
 }
 
@@ -321,11 +349,13 @@ extension ViewController {
         for node in sceneLocationView.locationNodes {
             sceneLocationView.removeLocationNode(locationNode: node)
         }
+        annotations.removeAll()
 
         VenueService.getPins(type: .landmark, completion: { (resultDict) in
             DispatchQueue.main.async {
                 for (id, pin) in resultDict {
                     self.addLandmark(pin: pin)
+                    self.addAnnotation(pin: pin)
                 }
                 completion()
             }
@@ -335,6 +365,7 @@ extension ViewController {
             DispatchQueue.main.async {
                 for (id, pin) in resultDict {
                     self.addLandmark(pin: pin)
+                    self.addAnnotation(pin: pin)
                 }
                 completion()
             }
@@ -344,6 +375,7 @@ extension ViewController {
             DispatchQueue.main.async {
                 for (id, pin) in resultDict {
                     self.addLandmark(pin: pin)
+                    self.addAnnotation(pin: pin)
                 }
                 completion()
             }
@@ -353,7 +385,7 @@ extension ViewController {
     func addLandmark(pin: Pinnable) {
         let lat = pin.lat
         let lon = pin.lon
-        let altitude = 22.0 // pin.el // basically by default
+        let altitude = sceneLocationView.currentLocation()?.altitude ?? 22.0 // pin.el // basically by default
         let label: String
         if let landmark = pin as? Landmark, let text = landmark.label {
             label = text
@@ -368,5 +400,24 @@ extension ViewController {
         let pinImage = pin.image ?? UIImage(named: "pin")!
         let pinLocationNode = LocationAnnotationNode(location: pinLocation, image: pinImage.resized(newSize: CGSize(width: 50, height: 50))!)
         sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: pinLocationNode)
+    }
+    
+    func addAnnotation(pin: Pinnable) {
+        let annotation = PinnableAnnotation()
+        annotation.pin = pin
+        
+        let coordinate = CLLocationCoordinate2DMake(pin.lat, pin.lon)
+        annotation.coordinate = coordinate
+        if let title = (pin as? Landmark)?.label {
+            annotation.title = title
+        }
+        if let type = (pin as? Event)?.eventType {
+            annotation.subtitle = type.rawValue
+        } else if let type = (pin as? Exit)?.exitType {
+            annotation.subtitle = type.rawValue
+        }
+        mapView.addAnnotation(annotation)
+        
+        annotations.append(annotation)
     }
 }

@@ -35,7 +35,6 @@ class SetupViewController: UIViewController {
     
     // Data
     var annotations: [String: PinnableAnnotation] = [String: PinnableAnnotation]()
-    var pins: [String: Pinnable] = [String: Pinnable]()
     let locationManager = LocationManager.shared
     
     override func viewDidLoad() {
@@ -56,7 +55,6 @@ class SetupViewController: UIViewController {
         for (key, value) in annotations {
             mapView.removeAnnotation(value)
             annotations[key] = nil
-            pins.removeAll()
         }
         VenueService.getPins(type: .landmark, completion: { (resultDict) in
             DispatchQueue.main.async {
@@ -103,7 +101,6 @@ class SetupViewController: UIViewController {
         mapView.addAnnotation(annotation)
         
         annotations[id] = annotation
-        pins[id] = pin
     }
     
     @IBAction func didClickButton(_ sender: UIButton) {
