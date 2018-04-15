@@ -15,7 +15,7 @@ import MapKit
 import CocoaLumberjack
 
 @available(iOS 11.0, *)
-class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDelegate {
+class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDelegate {
     let sceneLocationView = SceneLocationView()
     
     let mapView = MKMapView()
@@ -42,6 +42,11 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     
     var adjustNorthByTappingSidesOfScreen = true
     
+    // timers
+    @IBOutlet weak var labelTimer: UILabel!
+    @IBOutlet weak var buttonSafe: UIButton!
+    var safeTimer: Timer?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -51,10 +56,12 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         infoLabel.numberOfLines = 0
         sceneLocationView.addSubview(infoLabel)
         
+        infoLabel.isHidden = true
+        
         updateInfoLabelTimer = Timer.scheduledTimer(
             timeInterval: 0.1,
             target: self,
-            selector: #selector(ViewController.updateInfoLabel),
+            selector: #selector(TrainingViewController.updateInfoLabel),
             userInfo: nil,
             repeats: true)
         
@@ -70,8 +77,8 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
             sceneLocationView.showFeaturePoints = true
         }
 
-        self.view.addSubview(self.sceneLocationView)
-
+        self.view.insertSubview(self.sceneLocationView, belowSubview: labelTimer)
+        
         // CODEFEST 2018
         refresh {
             
@@ -79,6 +86,8 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
                 self.toggleMap()
             }
         }
+        
+        startTimer()
     }
     
     fileprivate func toggleMap() {
@@ -90,7 +99,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         updateUserLocationTimer = Timer.scheduledTimer(
             timeInterval: 0.5,
             target: self,
-            selector: #selector(ViewController.updateUserLocation),
+            selector: #selector(TrainingViewController.updateUserLocation),
             userInfo: nil,
             repeats: true)
     }
@@ -114,9 +123,9 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         
         sceneLocationView.frame = CGRect(
             x: 0,
-            y: 0,
+            y: labelTimer.frame.size.height,
             width: self.view.frame.size.width,
-            height: self.view.frame.size.height)
+            height: self.view.frame.size.height - labelTimer.frame.size.height - buttonSafe.frame.size.height)
         
         infoLabel.frame = CGRect(x: 6, y: 0, width: self.view.frame.size.width - 12, height: 14 * 4)
         
@@ -131,6 +140,30 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
             y: self.view.frame.size.height / 2,
             width: self.view.frame.size.width,
             height: self.view.frame.size.height / 2)
+    }
+    
+    @IBAction func didClickSafe(_ sender: Any) {
+        stopTimer()
+        safeTimer = nil
+    }
+    
+    fileprivate func startTimer() {
+        guard safeTimer == nil else { return }
+        let startTime = Date()
+        safeTimer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true, block: { (timer) in
+            let timeInterval = Date().timeIntervalSince(startTime)
+            let min = Int(timeInterval / 60)
+            let sec = Int(timeInterval - Double(min * 60))
+            
+            let ms = Int((Double(timeInterval) - Double(min * 60) - Double(sec)) * 100)
+            self.labelTimer.text = "\(min)m \(sec)s \(ms)ms"
+        })
+    }
+    
+    fileprivate func stopTimer() {
+        safeTimer?.invalidate()
+        safeTimer = nil
+        buttonSafe.isEnabled = false
     }
     
     override func didReceiveMemoryWarning() {
@@ -271,30 +304,16 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
 //        return nil
 //    }
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let identifier = "MyPin"
-        
         if annotation is MKUserLocation {
             return nil
         }
+        let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: nil)
+        annotationView.canShowCallout = true
         
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
-        
-        if annotationView == nil {
-            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-            annotationView?.canShowCallout = true
-            
-            if let pinAnnotation = annotation as? PinnableAnnotation {
-                annotationView?.image = pinAnnotation.image?.resized(newSize: CGSize(width: 20, height: 20))
-            }
-            
-            // if you want a disclosure button, you'd might do something like:
-            //
-            // let detailButton = UIButton(type: .detailDisclosure)
-            // annotationView?.rightCalloutAccessoryView = detailButton
-        } else {
-            annotationView?.annotation = annotation
+        if let pinAnnotation = annotation as? PinnableAnnotation {
+            annotationView.image = pinAnnotation.image?.resized(newSize: CGSize(width: 20, height: 20))
         }
-        
+
         return annotationView
     }
 
@@ -344,7 +363,7 @@ extension UIView {
     }
 }
 
-extension ViewController {
+extension TrainingViewController {
     func refresh(completion:@escaping (()->Void)) {
         for node in sceneLocationView.locationNodes {
             sceneLocationView.removeLocationNode(locationNode: node)

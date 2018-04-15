@@ -10,7 +10,7 @@
 		4901EF051F1B7D560067870D /* SceneLocationEstimate+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4901EF041F1B7D560067870D /* SceneLocationEstimate+Extensions.swift */; };
 		49099E391F24BAE5007B76FD /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49099E381F24BAE5007B76FD /* SCNVector3+Extensions.swift */; };
 		49A3FBDC1F09988100AA59C8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A3FBDB1F09988100AA59C8 /* AppDelegate.swift */; };
-		49A3FBE01F09988100AA59C8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A3FBDF1F09988100AA59C8 /* ViewController.swift */; };
+		49A3FBE01F09988100AA59C8 /* TrainingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A3FBDF1F09988100AA59C8 /* TrainingViewController.swift */; };
 		49A3FBE51F09988100AA59C8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49A3FBE41F09988100AA59C8 /* Assets.xcassets */; };
 		49A3FBE81F09988100AA59C8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49A3FBE61F09988100AA59C8 /* LaunchScreen.storyboard */; };
 		49A3FBF51F099A5F00AA59C8 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A3FBF41F099A5F00AA59C8 /* LocationManager.swift */; };
@@ -38,7 +38,7 @@
 		49099E381F24BAE5007B76FD /* SCNVector3+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNVector3+Extensions.swift"; sourceTree = "<group>"; };
 		49A3FBD81F09988100AA59C8 /* OutSafeAR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OutSafeAR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49A3FBDB1F09988100AA59C8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		49A3FBDF1F09988100AA59C8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		49A3FBDF1F09988100AA59C8 /* TrainingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingViewController.swift; sourceTree = "<group>"; };
 		49A3FBE41F09988100AA59C8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		49A3FBE71F09988100AA59C8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		49A3FBE91F09988100AA59C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -97,7 +97,7 @@
 			children = (
 				49A3FBF31F099A4A00AA59C8 /* Source */,
 				49A3FBDB1F09988100AA59C8 /* AppDelegate.swift */,
-				49A3FBDF1F09988100AA59C8 /* ViewController.swift */,
+				49A3FBDF1F09988100AA59C8 /* TrainingViewController.swift */,
 				8EEB1C152082BC9800FE4209 /* Firebase */,
 				D8C205D01F5B197200675E6E /* NotSupportedViewController.swift */,
 				49A3FBE41F09988100AA59C8 /* Assets.xcassets */,
@@ -276,7 +276,7 @@
 				49A3FBFF1F09B1D200AA59C8 /* LocationNode.swift in Sources */,
 				49A3FBFD1F09B00400AA59C8 /* CLLocation+Extensions.swift in Sources */,
 				49A3FC051F0A423800AA59C8 /* CGPoint+Extensions.swift in Sources */,
-				49A3FBE01F09988100AA59C8 /* ViewController.swift in Sources */,
+				49A3FBE01F09988100AA59C8 /* TrainingViewController.swift in Sources */,
 				8EEB1C2420830D2000FE4209 /* Pinnable.swift in Sources */,
 				8EEB1C2220830BDD00FE4209 /* SetupViewController.swift in Sources */,
 				4901EF051F1B7D560067870D /* SceneLocationEstimate+Extensions.swift in Sources */,
