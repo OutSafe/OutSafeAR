@@ -16,6 +16,21 @@ class SetupViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var buttonStart: UIButton!
     
+    var locationIsAccurate: Bool {
+        return currentAccuracy < 15
+    }
+    var currentAccuracy: Double = 0 {
+        didSet {
+            if locationIsAccurate {
+                print("Location accuracy: ready (\(currentAccuracy))")
+                buttonStart.alpha = 1
+            } else {
+                print("Location accuracy: not ready (\(currentAccuracy))")
+                buttonStart.alpha = 0.5
+            }
+        }
+    }
+    
     // Data
     var annotations: [MKAnnotation] = [MKAnnotation]()
     let locationManager = LocationManager.shared
@@ -60,6 +75,24 @@ class SetupViewController: UIViewController {
         }
         mapView.addAnnotation(annotation)
     }
+    
+    @IBAction func didClickButton(_ sender: UIButton) {
+        if locationIsAccurate {
+            showButtonOptions()
+        } else {
+            let alert = UIAlertController(title: "Warning: Location inaccurate", message: "Your location accuracy is currently at \(currentAccuracy). Lower accuracy (<15) will help with a better experience. Continue?", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Wait", style: .default, handler: { (action) in
+                self.showButtonOptions()
+            }))
+            alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: nil))
+
+            present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    fileprivate func showButtonOptions() {
+        print("here")
+    }
 }
 
 extension SetupViewController: LocationManagerDelegate {
@@ -68,15 +101,7 @@ extension SetupViewController: LocationManagerDelegate {
             centerMapOnLocation(location: location)
         }
         
-        if location.horizontalAccuracy < 15 {
-            print("Location accuracy: ready (\(location.horizontalAccuracy))")
-            buttonStart.isEnabled = true
-            buttonStart.alpha = 1
-        } else {
-            print("Location accuracy: not ready (\(location.horizontalAccuracy))")
-            buttonStart.isEnabled = false
-            buttonStart.alpha = 0.5
-        }
+        currentAccuracy = location.horizontalAccuracy
     }
     
     func locationManagerDidUpdateHeading(_ locationManager: LocationManager, heading: CLLocationDirection, accuracy: CLLocationDirection) {
