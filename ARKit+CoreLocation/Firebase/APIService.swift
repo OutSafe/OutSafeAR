@@ -76,8 +76,8 @@ class APIService: NSObject {
         
         try! request.httpBody = JSONSerialization.data(withJSONObject: params, options: [])
         
-        let task = URLSession.shared.dataTask(with: request)
-        task.resume()
+        let task = urlSession?.dataTask(with: request)
+        task?.resume()
         
         self.completionHandler = completion
     }

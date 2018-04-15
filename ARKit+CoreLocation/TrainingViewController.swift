@@ -73,6 +73,10 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
         sceneLocationView.showAxesNode = true
         sceneLocationView.locationDelegate = self
         
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleGesture(_:)))
+        doubleTap.numberOfTapsRequired = 2
+        sceneLocationView.addGestureRecognizer(doubleTap)
+        
         if displayDebugging {
             sceneLocationView.showFeaturePoints = true
         }
@@ -88,6 +92,10 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
         }
         
         startTimer()
+    }
+    
+    @objc fileprivate func handleGesture(_ gesture: Any) {
+        print("double tap")
     }
     
     fileprivate func toggleMap() {
