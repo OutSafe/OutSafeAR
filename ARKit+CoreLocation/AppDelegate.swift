@@ -12,6 +12,10 @@ import Firebase
 import UserNotifications
 import FirebaseMessaging
 
+extension Notification.Name {
+    static let RemoteNotificationReceived = Notification.Name("RemoteNotificationReceived")
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -80,6 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
         print("Remote notification received: \(userInfo)")
+        NotificationCenter.default.post(name: Notification.Name.RemoteNotificationReceived, object: nil)
     }
 }
 

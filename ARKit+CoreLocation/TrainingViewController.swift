@@ -53,6 +53,8 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshOnNotification), name: Notification.Name.RemoteNotificationReceived, object: nil)
+        
         infoLabel.font = UIFont.systemFont(ofSize: 10)
         infoLabel.textAlignment = .left
         infoLabel.textColor = UIColor.white
@@ -379,6 +381,12 @@ extension UIView {
 }
 
 extension TrainingViewController {
+    @objc func refreshOnNotification() {
+        print("Calling refreshOnNotification")
+        refresh {
+            
+        }
+    }
     func refresh(completion:@escaping (()->Void)) {
         for node in sceneLocationView.locationNodes {
             sceneLocationView.removeLocationNode(locationNode: node)

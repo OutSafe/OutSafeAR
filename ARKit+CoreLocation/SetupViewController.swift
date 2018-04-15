@@ -42,6 +42,8 @@ class SetupViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         locationManager.delegate = self
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshOnNotification), name: Notification.Name.RemoteNotificationReceived, object: nil)
     }
 
     var first: Bool = true
@@ -49,6 +51,13 @@ class SetupViewController: UIViewController {
         let span = MKCoordinateSpanMake(0.05, 0.05)
         let region = MKCoordinateRegion(center: location.coordinate, span: span)
         mapView.setRegion(region, animated: true)
+    }
+    
+    @objc func refreshOnNotification() {
+        print("Calling refreshOnNotification")
+        refresh {
+            
+        }
     }
     
     func refresh(completion:@escaping (()->Void)) {
