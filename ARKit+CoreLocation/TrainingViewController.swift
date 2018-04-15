@@ -433,8 +433,8 @@ extension TrainingViewController {
     func addLandmark(pin: Pinnable) {
         let lat = pin.lat
         let lon = pin.lon
-        let altitude = sceneLocationView.currentLocation()?.altitude ?? 22.0 // pin.el // basically by default
-        print("BOBBYTEST altitude of pin \(altitude)")
+//        let altitude = sceneLocationView.currentLocation()?.altitude ?? 22.0 // pin.el // basically by default
+        let altitude = 35.0 // pin.el // basically by default
         let label: String
         if let landmark = pin as? Landmark, let text = landmark.label {
             label = text
@@ -442,7 +442,7 @@ extension TrainingViewController {
             label = ""
         }
         
-        print("Adding pin at \(lat) \(lon) \(altitude) label: \(label)")
+        print("BOBBYTEST Adding pin at \(lat) \(lon) \(altitude) label: \(label)")
         
         let pinCoordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
         let pinLocation = CLLocation(coordinate: pinCoordinate, altitude: altitude)
