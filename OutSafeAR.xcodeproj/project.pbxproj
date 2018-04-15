@@ -56,6 +56,7 @@
 		6C10523EF85AA6B7CDF962AD /* Pods_ARKit_CoreLocation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ARKit_CoreLocation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CE6BCE252B0CCB643DEBB1B /* Pods_OutSafeAR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OutSafeAR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E9802B120836F0900475725 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		8E9802B32083753E00475725 /* OutSafeAR.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OutSafeAR.entitlements; sourceTree = "<group>"; };
 		8EEB1C182082BD7700FE4209 /* VenueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueService.swift; sourceTree = "<group>"; };
 		8EEB1C1A2082CB4D00FE4209 /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		8EEB1C1C2083051F00FE4209 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -84,6 +85,7 @@
 		49A3FBCF1F09988100AA59C8 = {
 			isa = PBXGroup;
 			children = (
+				8E9802B32083753E00475725 /* OutSafeAR.entitlements */,
 				49A3FBDA1F09988100AA59C8 /* ARKit+CoreLocation */,
 				49A3FBD91F09988100AA59C8 /* Products */,
 				5F8D9F16076E5CEBAA727F10 /* Pods */,
@@ -200,6 +202,11 @@
 				TargetAttributes = {
 					49A3FBD71F09988100AA59C8 = {
 						CreatedOnToolsVersion = 9.0;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -429,6 +436,7 @@
 			baseConfigurationReference = BB63ACFD072D3E456D007959 /* Pods-OutSafeAR.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = OutSafeAR.entitlements;
 				DEVELOPMENT_TEAM = H799H8B8DD;
 				INFOPLIST_FILE = "ARKit+CoreLocation/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -445,6 +453,7 @@
 			baseConfigurationReference = 1848ACE5A8B047AB293BFD69 /* Pods-OutSafeAR.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = OutSafeAR.entitlements;
 				DEVELOPMENT_TEAM = H799H8B8DD;
 				INFOPLIST_FILE = "ARKit+CoreLocation/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
