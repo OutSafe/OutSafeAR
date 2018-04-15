@@ -216,30 +216,16 @@ extension SetupViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let identifier = "MyPin"
-        
         if annotation is MKUserLocation {
             return nil
         }
         
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: nil)
+        annotationView.canShowCallout = true
         
-        if annotationView == nil {
-            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-            annotationView?.canShowCallout = true
-            
-            if let pinAnnotation = annotation as? PinnableAnnotation {
-                annotationView?.image = pinAnnotation.image?.resized(newSize: CGSize(width: 20, height: 20))
-            }
-            
-            // if you want a disclosure button, you'd might do something like:
-            //
-            // let detailButton = UIButton(type: .detailDisclosure)
-            // annotationView?.rightCalloutAccessoryView = detailButton
-        } else {
-            annotationView?.annotation = annotation
+        if let pinAnnotation = annotation as? PinnableAnnotation {
+            annotationView.image = pinAnnotation.image?.resized(newSize: CGSize(width: 20, height: 20))
         }
-        
         return annotationView
     }
 }
@@ -302,6 +288,10 @@ extension SetupViewController {
                         message = ""
                     }
                     self.feedback(title: title, message: message)
+                    
+                    self.refresh {
+                        
+                    }
                 }
                 else{
                     if let failedResult = error{

@@ -186,20 +186,58 @@
             </objects>
             <point key="canvasLocation" x="1244" y="-205.54722638680661"/>
         </scene>
-        <!--View Controller-->
+        <!--Training View Controller-->
         <scene sceneID="PlY-ja-CX2">
             <objects>
-                <viewController id="eXD-Fn-cqL" customClass="ViewController" customModule="OutSafeAR" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="eXD-Fn-cqL" customClass="TrainingViewController" customModule="OutSafeAR" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="LLQ-Kr-SN2">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XOK-ut-XzH">
+                                <rect key="frame" x="0.0" y="20" width="375" height="46"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="46" id="GGK-GA-4Rm"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="AppleColorEmoji" family="Apple Color Emoji" pointSize="21"/>
+                                <color key="textColor" red="0.83921568629999999" green="0.15686274510000001" blue="0.15686274510000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="29a-IV-fDX">
+                                <rect key="frame" x="0.0" y="608" width="375" height="59"/>
+                                <color key="backgroundColor" red="0.30588235289999999" green="0.83921568629999999" blue="0.63137254899999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="59" id="0El-Zu-ats"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="AmericanTypewriter-Bold" family="American Typewriter" pointSize="19"/>
+                                <state key="normal" title="I am safe">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="didClickSafe:" destination="eXD-Fn-cqL" eventType="touchUpInside" id="Rp5-Ht-rJM"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="29a-IV-fDX" firstAttribute="leading" secondItem="ybf-VC-Oi3" secondAttribute="leading" id="Cns-4c-zv9"/>
+                            <constraint firstAttribute="bottom" secondItem="29a-IV-fDX" secondAttribute="bottom" id="X32-GC-REO"/>
+                            <constraint firstItem="XOK-ut-XzH" firstAttribute="leading" secondItem="ybf-VC-Oi3" secondAttribute="leading" id="mcD-em-8fU"/>
+                            <constraint firstItem="ybf-VC-Oi3" firstAttribute="trailing" secondItem="XOK-ut-XzH" secondAttribute="trailing" id="vEk-SQ-qgD"/>
+                            <constraint firstItem="ybf-VC-Oi3" firstAttribute="trailing" secondItem="29a-IV-fDX" secondAttribute="trailing" id="vQc-w2-gJS"/>
+                            <constraint firstItem="XOK-ut-XzH" firstAttribute="top" secondItem="ybf-VC-Oi3" secondAttribute="top" id="yZ4-RY-j9S"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="ybf-VC-Oi3"/>
                     </view>
+                    <connections>
+                        <outlet property="buttonSafe" destination="29a-IV-fDX" id="OlQ-78-FWB"/>
+                        <outlet property="labelTimer" destination="XOK-ut-XzH" id="nDL-6l-231"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N5Y-eP-3Ok" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1970" y="-205"/>
+            <point key="canvasLocation" x="1968.8" y="-205.54722638680661"/>
         </scene>
     </scenes>
     <resources>
