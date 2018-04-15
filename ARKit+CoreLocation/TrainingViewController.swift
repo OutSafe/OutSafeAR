@@ -182,6 +182,7 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
         safeTimer?.invalidate()
         safeTimer = nil
         buttonSafe.isEnabled = false
+        buttonSafe.isHidden = true
     }
     
     override func didReceiveMemoryWarning() {
