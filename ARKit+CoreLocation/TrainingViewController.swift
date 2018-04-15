@@ -79,10 +79,6 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
         sceneLocationView.showAxesNode = true
         sceneLocationView.locationDelegate = self
         
-        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleGesture(_:)))
-        doubleTap.numberOfTapsRequired = 2
-        sceneLocationView.addGestureRecognizer(doubleTap)
-        
         if displayDebugging {
             sceneLocationView.showFeaturePoints = true
         }
@@ -183,6 +179,10 @@ class TrainingViewController: UIViewController, MKMapViewDelegate, SceneLocation
         safeTimer = nil
         buttonSafe.isEnabled = false
         buttonSafe.isHidden = true
+        
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleGesture(_:)))
+        doubleTap.numberOfTapsRequired = 2
+        sceneLocationView.addGestureRecognizer(doubleTap)
     }
     
     override func didReceiveMemoryWarning() {
