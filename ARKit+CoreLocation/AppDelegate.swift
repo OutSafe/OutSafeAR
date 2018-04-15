@@ -8,6 +8,9 @@
 
 import UIKit
 import CocoaLumberjack
+import Firebase
+import UserNotifications
+import FirebaseMessaging
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,6 +30,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         DDLogDebug("NEW SESSION")
         
         UIApplication.shared.isIdleTimerDisabled = true
+        
+        FirebaseApp.configure()
+        registerForRemoteNotifications()
+        
         return true
     }
 
@@ -52,6 +59,43 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+    func registerForRemoteNotifications() {
+        print("PUSH: registering for notifications")
+        
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: {result, error in
+                print("PUSH: request authorization result \(result) error \(String(describing: error))")
+                
+                if result {
+                    DispatchQueue.main.async {
+                        UIApplication.shared.registerForRemoteNotifications()
+                    }
+                }
+        })
+        
+        Messaging.messaging().delegate = self
+    }
+    
+}
 
+extension AppDelegate: MessagingDelegate {
+    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+        print("PUSH: Firebase registration token: \(fcmToken)")
+    }
+    
+    func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
+        print("PUSH: Received data message: \(remoteMessage.appData)")
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        print("PUSH: Messaging did receive FCM token \(fcmToken)")
+        
+        // if user has push enabled but toggled notifications off in defaults, disable FCM token
+        APIService().storeFCMToken(fcmToken) { (result, error) in
+            print("Result \(result) error \(error)")
+        }
+    }
 }
 
