@@ -67,7 +67,19 @@ struct Exit: Pinnable {
     let status: Int
     let exitType: ExitType
     var image: UIImage? {
-        return UIImage(named: "iconDoor")
+        if exitType == .saferoom {
+            if status == 1 {
+                return UIImage(named: "iconShieldGreen")
+            } else {
+                return UIImage(named: "iconShieldRed")
+            }
+        } else {
+            if status == 1 {
+                return UIImage(named: "iconDoorGreen")
+            } else {
+                return UIImage(named: "iconDoorRed")
+            }
+        }
     }
 }
 
